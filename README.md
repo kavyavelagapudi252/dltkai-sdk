@@ -8,7 +8,12 @@ DLTK renders a comprehensive spectrum of solutions that can be accessed by users
 
 ### Installation
 
-DLTK SDK requires Python 3.5 + . Go to https://dltk.ai/ and create an app. On creation of an app, you will get an API Key.
+DLTK SDK requires Python 3.5 + .
+
+Install the dltk library: 
+```
+pip install dltkai==1.0.4
+```
 
 ```sh
 from dltkai.NaturalLanguage import sentiment
