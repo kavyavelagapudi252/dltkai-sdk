@@ -12,7 +12,7 @@ DLTK SDK requires Python 3.5 + .
 
 Install the dltk library: 
 ```
-pip install dltkai==1.0.4
+pip install dltkai
 ```
 
 ```sh
