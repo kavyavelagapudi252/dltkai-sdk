@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="dltkai",
-    version="1.0.4",
+    version="1.0.6",
     author="DLTK",
     author_email="connect@qubitai.tech",
     description="Python Client for DLTK.",
