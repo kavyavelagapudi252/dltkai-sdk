@@ -11,7 +11,7 @@ DLTK renders a comprehensive spectrum of solutions that can be accessed by users
 DLTK SDK requires Python 3.5 + . Go to https://dltk.ai/ and create an app. On creation of an app, you will get an API Key.
 
 ```sh
-from dltkai.nlp import sentiment
+from dltkai.NaturalLanguage import sentiment
 response = sentiment('I am feeling good.')
 print(response)
 ```
