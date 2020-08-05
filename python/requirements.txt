@@ -5,6 +5,13 @@ Created on Wed Aug  5 11:49:15 2020
 
 @author: nageshsinghchauhan
 """
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Aug  5 11:49:15 2020
+
+@author: nageshsinghchauhan
+"""
 absl-py==0.9.0
 alabaster==0.7.12
 amqp==2.6.0
@@ -48,6 +55,21 @@ decorator==4.4.2
 defusedxml==0.6.0
 distlib==0.3.0
 dj-database-url==0.5.0
+Django==2.2
+django-classy-tags==1.0.0
+django-cms==3.7.3
+django-crispy-forms==1.9.1
+django-filter==2.3.0
+django-formtools==2.2
+django-heroku==0.3.1
+django-sekizai==1.1.0
+django-tinymce==3.0.2
+django-treebeard==4.3.1
+djangocms-admin-style==1.5.0
+djangocms-text-ckeditor==3.9.1
+djangorestframework==3.11.0
+dltk==0.2.1
+dltk-ai==1.0.4
 docker==4.2.0
 docutils==0.15.2
 docx==0.2.4
@@ -93,7 +115,7 @@ humanfriendly==8.2
 ibm-cloud-sdk-core==1.5.1
 ibm-watson==4.4.1
 idna==2.8
-imageai
+imageai==2.1.5
 imageio==2.9.0
 imagesize==1.2.0
 imutils==0.5.3
