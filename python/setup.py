@@ -26,7 +26,9 @@ setuptools.setup(
         'matplotlib==3.1.3',
         'gensim==3.8.1',
         'beautifulsoup4==4.8.2',
-        'rake-nltk==1.0.4'
+        'rake-nltk==1.0.4',
+        'imutils',
+        'opencv-python==4.3.0.36'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
