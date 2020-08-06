@@ -202,7 +202,7 @@ class NaturalLanguage:
                 polarity = 3
             elif scores["compound"] < 0:
                 emotion = "NEGATIVE"
-                polarity = print(dl.NaturalLanguage.ner_tagger('my name is vishnu'))
+                polarity = 1
             else:
                 emotion = "NEUTRAL"
                 polarity = 0
@@ -212,7 +212,7 @@ class NaturalLanguage:
             response["scores"] = scores
             return response
         except Exception as e:
-            print("Exception generated inside sentiment method in "+os.getcwd()+'/dltk_ai/nlp.py -',e.args)
+            print("Exception generated inside sentiment method in "+os.getcwd()+'/dltkai/nlp.py -',e.args)
 
 
 
