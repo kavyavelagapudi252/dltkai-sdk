@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="dltkai",
-    version="1.0.11",
+    version="1.1.0",
     author="DLTK",
     author_email="connect@qubitai.tech",
     description="Python Client for DLTK.",
@@ -29,7 +29,7 @@ setuptools.setup(
         'beautifulsoup4==4.8.2',
         'rake-nltk==1.0.4',
         'imutils',
-        'opencv-python==4.0.0.21',
+        'opencv-python',
         'pandas==1.1.0',
     ],
     classifiers=[

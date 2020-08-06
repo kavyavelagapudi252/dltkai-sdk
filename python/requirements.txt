@@ -5,7 +5,7 @@ Created on Wed Aug  5 11:49:15 2020
 
 @author: nageshsinghchauhan
 """
-pandas==1.1.0
+pandas
 en-core-web-sm==2.2.5
 future==0.18.2
 gast==0.3.3
@@ -29,7 +29,7 @@ nibabel==3.0.2
 nipype==1.4.2
 nltk==3.4.5
 numpy==1.18.1
-opencv-python==4.0.0.21
+opencv-python
 pandas==1.0.1
 pandocfilters==1.4.2
 parso==0.7.0

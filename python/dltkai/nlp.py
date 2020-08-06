@@ -202,7 +202,7 @@ class NaturalLanguage:
                 polarity = 3
             elif scores["compound"] < 0:
                 emotion = "NEGATIVE"
-                polarity = print(dl.NaturalLanguage.ner_tagger('my name is vishnu'))
+                polarity = 1
             else:
                 emotion = "NEUTRAL"
                 polarity = 0
