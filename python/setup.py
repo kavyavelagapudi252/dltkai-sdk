@@ -3,6 +3,7 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+
 setuptools.setup(
     name="dltkai",
     version="1.0.11",
@@ -28,7 +29,8 @@ setuptools.setup(
         'beautifulsoup4==4.8.2',
         'rake-nltk==1.0.4',
         'imutils',
-        'opencv-python==4.3.0.36'
+        'opencv-python==4.0.0.21',
+        'pandas==1.1.0',
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
