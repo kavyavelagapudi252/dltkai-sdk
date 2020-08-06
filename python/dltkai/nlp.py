@@ -1,17 +1,12 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Aug  5 09:02:20 2020
-
-@author: nageshsinghchauhan
-"""
 import base64
 import os
+import pandas as pd
 import spacy
 from spacy import displacy
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import nltk
 import pickle
+import time
 #nltk.download('stopwords')
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
@@ -21,6 +16,8 @@ import string
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import load_model
+import tensorflow as tf
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 nlp = spacy.load('en_core_web_sm')
 
 class NaturalLanguage:
@@ -37,10 +34,7 @@ class NaturalLanguage:
             response["text"] = text
             return response
         except Exception as e:
-            print("Exception generated inside pos_tagger method in "+os.getcwd()+'/dltk_ai/nlp.py -',e.args)
-    
-    
-    
+            print("Exception generated inside pos_tagger method in "+os.getcwd()+'/dltkai/nlp.py -',e.args)
     
     
     def ner_tagger(params):
@@ -59,12 +53,10 @@ class NaturalLanguage:
             response["organizations"] = org_details
             return response
         except Exception as e:
-            print("Exception generated inside ner_tagger method in "+os.getcwd()+'/dltk_ai/nlp.py -',e.args)
+            print("Exception generated inside ner_tagger method in "+os.getcwd()+'/dltkai/nlp.py -',e.args)
     
     
-    
-    
-    def parser(params):
+    def dependency_parser(params):
         try:
             text = params
             doc = nlp(text)
@@ -80,61 +72,63 @@ class NaturalLanguage:
             response["text"] = text
             return dependency_response
         except Exception as e:
-            print("Exception generated inside parser method in "+os.getcwd()+'/dltk_ai/nlp.py -',e.args)
-    
-    
-    def sentiment(params):
+            print("Exception generated inside parser method in "+os.getcwd()+'/dltkai/nlp.py -',e.args)
+
+    def decode_sentiment(self,score, include_neutral=True):
+    # SENTIMENT
+        POSITIVE = "POSITIVE"
+        NEGATIVE = "NEGATIVE"
+        NEUTRAL = "NEUTRAL"
+        SENTIMENT_THRESHOLDS = (0.4, 0.7)
+        if include_neutral:        
+            label = NEUTRAL
+            if score <= SENTIMENT_THRESHOLDS[0]:
+                label = NEGATIVE
+            elif score >= SENTIMENT_THRESHOLDS[1]:
+                label = POSITIVE
+
+            return label
+        else:
+            return NEGATIVE if score < 0.5 else POSITIVE
+
+
+    def sentiment_analysis(self,text):
         try:
-            text = params
-            sid = SentimentIntensityAnalyzer()
-            scores = sid.polarity_scores(text)
-            response = {}
-            if scores["compound"] > 0:
-                emotion = "POSITIVE"
-                polarity = 3
-            elif scores["compound"] < 0:
-                emotion = "NEGATIVE"
-                polarity = 1
-            else:
-                emotion = "NEUTRAL"
-                polarity = 0
-            response["emotion"] = emotion
-            response["text"] = text
-            response["polarity"] = polarity
-            response["scores"] = scores
-            return response
+            maxlen = 50
+            #embed_dim = 100
+            #max_words = 20000
+            print('inside detect function before cleaning')
+            text=self.clean_text(str(text))
+            print(text)
+            print(type(text))
+            with open(os.getcwd()+'/resources/tokenizer_sentiment.pkl', 'rb') as handle:
+                tokenizer = pickle.load(handle)
+            ls=[]
+            ls.append(text)
+            data = tokenizer.texts_to_sequences(ls)
+            #print('tokenized data-',data)
+            start_at = time.time()
+            data = pad_sequences(data, maxlen=maxlen, padding='post')
+            #print('padded-seq',data)
+            model=load_model(os.getcwd()+'/resources/model_sentiment.h5')
+            score=model.predict(data)
+            include_neutral = True
+            label = self.decode_sentiment(score, include_neutral=include_neutral)
+            return {"label": label, "score": float(score), "elapsed_time": time.time()-start_at}  
+
         except Exception as e:
-            print("Exception generated inside sentiment method in "+os.getcwd()+'/dltk_ai/nlp.py -',e.args)
-    
-    
-    
-    
-        def parser_svg(self,params):
-            try:
-                text = params
-                doc = nlp(text)
-                svg = displacy.render(doc, style="dep")
-                # svg2png(bytestring=svg, write_to='output.png')
-                with open('output.png', "rb") as image_file:
-                    encoded_string = base64.b64encode(image_file.read())
-                return encoded_string
-            finally:
-                os.remove('output.png')
+            print("Exception generated inside toxic_comment_detect method in "+os.getcwd()+'/dltkai/nlp.py -',e.args)
+               
+        
+        
+                
     def clean_text(text):
-        try:
-    
-    
+        try:    
             text = text.translate(string.punctuation)
-    
-    
             text = text.lower().split()
-    
             stops = set(stopwords.words("english"))
             text = [w for w in text if not w in stops and len(w) >= 3]
-    
             text = " ".join(text)
-    
-    
             text = re.sub(r"[^A-Za-z0-9^,!.\/'+-=]", " ", text)
             text = re.sub(r"what's", "what is ", text)
             text = re.sub(r"\'s", " ", text)
@@ -164,20 +158,18 @@ class NaturalLanguage:
             text = re.sub(r"j k", "jk", text)
             text = re.sub(r"\s{2,}", " ", text)
     
-    
-    
             return text
         except Exception as e:
-            print("Exception generated inside clean_text method in "+os.getcwd()+'/dltk_ai/nlp.py -',e.args)
+            print("Exception generated inside clean_text method in "+os.getcwd()+'/dltkai/nlp.py -',e.args)
     
     
-    def toxic_comment_detect(text):
+    def toxic_comment_detect(self,text):
         try:
             maxlen = 50
             embed_dim = 100
             max_words = 20000
             print('inside detect function before cleaning')
-            text=clean_text(str(text))
+            text=self.clean_text(str(text))
             print(text)
             print(type(text))
             with open(os.getcwd()+'/resources/tokenizer.pickle', 'rb') as handle:
@@ -201,5 +193,78 @@ class NaturalLanguage:
                 sample='sexism'
             return sample
         except Exception as e:
-            print("Exception generated inside toxic_comment_detect method in "+os.getcwd()+'/dltk_ai/nlp.py -',e.args)
+            print("Exception generated inside toxic_comment_detect method in "+os.getcwd()+'/dltkai/nlp.py -',e.args)
+
+
+    def detect_sarcasm(self,text):
+        num_words=35000
+        maxlen = 20
+        print('Printing Text Typed:')
+        text=self.clean_text(str(text))
+        print(text)
+        print(type(text))
+        with open('resources/sarcasm_tokenizer.pickle', 'rb') as handle:
+            tokenizer = pickle.load(handle)
+        ls = []
+        ls.append(text)
+        data = tokenizer.fit_on_texts(ls)
+        data = tokenizer.texts_to_sequences(ls)
+        print('tokenized data-',data)
+        data = pad_sequences(data, maxlen)
+        print('pad sequences data-',data)
+        model= tf.keras.models.load_model('resources/sarcasm_word2vec.h5')
+        pred=model.predict(data)
+        print('Printing Predictions')
+        print(pred)
+        sample='nothing detected'
+        if pred>0.5:
+            sample='Sarcastic'
+            print("Sarcastic")
+        elif pred<0.5:
+            sample='No Sarcastic'
+            print("No Sarcastic")
+        return sample
+
+
+    def detect_tonality(text):
+        model1 = pd.read_pickle(r'resources/tonality_model.pickle')
+        with open('resources/tonality_vect.pickle', 'rb') as handle:
+            vect1 = pickle.load(handle)
     
+        #Testing HAM and SPAM Predection text
+        print("lets test whether text is HAM or SPAM: ")
+        t=np.array([text])
+        print(t)
+        t=vect1.transform(t)
+        prediction = model1.predict(t)
+        if prediction == 0:
+            print("HAM!")
+        else:
+            print("SPAM!")
+
+
+"""    
+    def sentiment(params):
+        try:
+            text = params
+            sid = SentimentIntensityAnalyzer()
+            scores = sid.polarity_scores(text)
+            response = {}
+            if scores["compound"] > 0:
+                emotion = "POSITIVE"
+                polarity = 3
+            elif scores["compound"] < 0:
+                emotion = "NEGATIVE"
+                polarity = 1
+            else:
+                emotion = "NEUTRAL"
+                polarity = 0
+            response["emotion"] = emotion
+            response["text"] = text
+            response["polarity"] = polarity
+            response["scores"] = scores
+            return response
+        except Exception as e:
+            print("Exception generated inside sentiment method in "+os.getcwd()+'/dltk_ai/nlp.py -',e.args)
+
+"""
