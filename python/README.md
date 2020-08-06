@@ -12,12 +12,12 @@ DLTK SDK requires Python 3.5 + .
 
 Install the dltk library: 
 ```
-pip install dltkai
+pip install -U dltkai
 ```
 
 ```sh
-from dltkai.NaturalLanguage import sentiment
-response = sentiment('I am feeling good.')
+from dltkai.NaturalLanguage import sentiment_detect
+response = sentiment_detect('I am feeling good.')
 print(response)
 ```
 
