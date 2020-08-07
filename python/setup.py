@@ -31,6 +31,7 @@ setuptools.setup(
         'imutils',
         'opencv-python',
         'pandas==1.0.0',
+        'streamlit==0.64.0'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
