@@ -156,32 +156,24 @@ class NaturalLanguage:
             comment_state=res['emotion']
             tagged_words=res['text']
             sample='no discernable type'
-<<<<<<< HEAD
             dt={}
             if res['emotion']=='NEGATIVE':
                 pred=model.predict(data)
-=======
             if res['emotion']=='NEGATIVE':
                 pred=model.predict(data)
-                sample=''
->>>>>>> 430d3419bc43da837d5e6b3f607816871efa24d6
                 if np.argmax(pred)==1:
                     sample='racism'
                 elif np.argmax(pred)==2:
                     sample='sexism'
-<<<<<<< HEAD
-
             dt['state']=comment_state
             dt['tagged_words']=tagged_words
             dt['toxic_comment_type']=sample
-=======
                 else:
                     print("not detected")
             dt={}
             dt['state']=comment_state
             dt['tagged_words']=tagged_words
             dt['cyber_bullying_type']=sample
->>>>>>> 430d3419bc43da837d5e6b3f607816871efa24d6
 
             return dt
 
