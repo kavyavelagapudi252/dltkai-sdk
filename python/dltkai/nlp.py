@@ -156,9 +156,9 @@ class NaturalLanguage:
             comment_state=res['emotion']
             tagged_words=res['text']
             sample='no discernable type'
+            #if res['emotion']=='NEGATIVE':
+            #    pred=model.predict(data)
             dt={}
-            if res['emotion']=='NEGATIVE':
-                pred=model.predict(data)
             if res['emotion']=='NEGATIVE':
                 pred=model.predict(data)
                 if np.argmax(pred)==1:
@@ -168,9 +168,9 @@ class NaturalLanguage:
             dt['state']=comment_state
             dt['tagged_words']=tagged_words
             dt['toxic_comment_type']=sample
-                else:
-                    print("not detected")
-            dt={}
+            #else:
+            #    print("not detected")
+            
             dt['state']=comment_state
             dt['tagged_words']=tagged_words
             dt['cyber_bullying_type']=sample
@@ -179,7 +179,6 @@ class NaturalLanguage:
 
         except Exception as e:
             print("Exception generated inside toxic_comment_detect method in "+os.getcwd()+'/dltkai/nlp.py -',e.args)
-            return 
 
 
     def detect_tonality(text):
@@ -263,4 +262,3 @@ class NaturalLanguage:
         except Exception as e:
             print("Exception generated inside toxic_comment_detect method in "+os.getcwd()+'/dltkai/nlp.py -',e.args)
 """
-
