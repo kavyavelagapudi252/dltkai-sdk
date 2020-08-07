@@ -15,8 +15,8 @@ setuptools.setup(
     url="https://github.com/dltk-ai/dltkai-sdk",
     packages=setuptools.find_packages(),
     install_requires=[
-        'Keras==2.3.1',
-        'tensorflow==2.3.0',
+        'Keras',
+        'tensorflow==2.2.0',
         'imageai==2.1.5',
         'nltk==3.4.5',
         'spacy==2.2.4',
@@ -30,7 +30,7 @@ setuptools.setup(
         'rake-nltk==1.0.4',
         'imutils',
         'opencv-python',
-        'pandas==1.1.0',
+        'pandas==1.0.0',
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

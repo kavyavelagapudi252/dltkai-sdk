@@ -146,27 +146,36 @@ class NaturalLanguage:
             embed_dim = 100
             max_words = 20000
             text=clean_text(str(text))
-            with open(os.getcwd()+'/resources/tokenizer.pickle', 'rb') as handle:
+            #print(type(text))
+            with open('resources/tokenizer.pickle', 'rb') as handle:
                 tokenizer = pickle.load(handle)
             ls=[]
             ls.append(text)
             data = tokenizer.texts_to_sequences(ls)
             #print('tokenized data-',data)
             data = pad_sequences(data, maxlen=maxlen, padding='post')
-            #print('padded-seq',data)
-            model=load_model(os.getcwd()+'/resources/Cyber_bullying-LSTM-multi-class')
-            pred=model.predict(data)
+           # print('padded-seq',data)
+            model=load_model('resources/Cyber_bullying-LSTM-multi-class')
+            res=NaturalLanguage.sentiment_detect(text)
+            comment_state=res['emotion']
+            tagged_words=res['text']
+            sample='no discernable type'
+            if res['emotion']=='NEGATIVE':
+                pred=model.predict(data)
+                sample=''
+                if np.argmax(pred)==1:
+                    sample='racism'
+                elif np.argmax(pred)==2:
+                    sample='sexism'
+                else:
+                    print("not detected")
+            dt={}
+            dt['state']=comment_state
+            dt['tagged_words']=tagged_words
+            dt['cyber_bullying_type']=sample
 
-            #print(model.summary())
-            dt=tokenizer.word_index
+            return dt
 
-
-            sample='nothing detected'
-            if np.argmax(pred)==1:
-                sample='racism'
-            elif np.argmax(pred)==2:
-                sample='sexism'
-            return sample
         except Exception as e:
             print("Exception generated inside toxic_comment_detect method in "+os.getcwd()+'/dltkai/nlp.py -',e.args)
 
@@ -176,7 +185,7 @@ class NaturalLanguage:
 
     def detect_tonality(text):
         model1 = pd.read_pickle(r'resources/tonality_model.pickle')
-        with open('resources/tonality_vect.pickle', 'rb') as handle:
+        with open(os.getcwd()+'/resources/tonality_vect.pickle', 'rb') as handle:
             vect1 = pickle.load(handle)
 
         #Testing HAM and SPAM Predection text
