@@ -8,8 +8,8 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import nltk
 import pickle
 import time
-
-#nltk.download('stopwords')
+import warnings
+warnings.filterwarnings("ignore")
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 import re
@@ -18,9 +18,9 @@ import string
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import load_model
-#from tensorflow.keras.models import load_model
 import tensorflow as tf
-from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer, TfidfVectorizer
+
 nlp = spacy.load('en_core_web_sm')
 
 
@@ -136,47 +136,48 @@ class NaturalLanguage:
             return NEGATIVE if score < 0.5 else POSITIVE
 
 
-
-
-
-
     def toxic_comment_detect(text):
         try:
             maxlen = 50
             embed_dim = 100
             max_words = 20000
             text=clean_text(str(text))
-            with open(os.getcwd()+'/resources/tokenizer.pickle', 'rb') as handle:
+            #print(type(text))
+            with open('resources/tokenizer.pickle', 'rb') as handle:
                 tokenizer = pickle.load(handle)
             ls=[]
             ls.append(text)
             data = tokenizer.texts_to_sequences(ls)
             #print('tokenized data-',data)
             data = pad_sequences(data, maxlen=maxlen, padding='post')
-            #print('padded-seq',data)
-            model=load_model(os.getcwd()+'/resources/Cyber_bullying-LSTM-multi-class')
-            pred=model.predict(data)
+           # print('padded-seq',data)
+            model=load_model('resources/Cyber_bullying-LSTM-multi-class')
+            res=NaturalLanguage.sentiment_detect(text)
+            comment_state=res['emotion']
+            tagged_words=res['text']
+            sample='no discernable type'
+            dt={}
+            if res['emotion']=='NEGATIVE':
+                pred=model.predict(data)
+                if np.argmax(pred)==1:
+                    sample='racism'
+                elif np.argmax(pred)==2:
+                    sample='sexism'
 
-            #print(model.summary())
-            dt=tokenizer.word_index
+            dt['state']=comment_state
+            dt['tagged_words']=tagged_words
+            dt['toxic_comment_type']=sample
 
+            return dt
 
-            sample='nothing detected'
-            if np.argmax(pred)==1:
-                sample='racism'
-            elif np.argmax(pred)==2:
-                sample='sexism'
-            return sample
         except Exception as e:
             print("Exception generated inside toxic_comment_detect method in "+os.getcwd()+'/dltkai/nlp.py -',e.args)
-
-
-
+            return 
 
 
     def detect_tonality(text):
         model1 = pd.read_pickle(r'resources/tonality_model.pickle')
-        with open('resources/tonality_vect.pickle', 'rb') as handle:
+        with open(os.getcwd()+'/resources/tonality_vect.pickle', 'rb') as handle:
             vect1 = pickle.load(handle)
 
         #Testing HAM and SPAM Predection text
@@ -186,9 +187,9 @@ class NaturalLanguage:
         t=vect1.transform(t)
         prediction = model1.predict(t)
         if prediction == 0:
-            print("HAM!")
+            return "HAM!"
         else:
-            print("SPAM!")
+            return "SPAM!"
 
 
     def sentiment_detect(params):
@@ -215,43 +216,18 @@ class NaturalLanguage:
             print("Exception generated inside sentiment method in "+os.getcwd()+'/dltk_ai/nlp.py -',e.args)
 
 
-
-"""
     def sarcasm_detect(text):
-        num_words=35000
-        maxlen = 20
-        print('Printing Text Typed:')
-        text=clean_text(str(text))
-        with open('resources/sarcasm_token_w2v.pickle', 'rb') as handle:
-            tokenizer = pickle.load(handle)
-        ls = []
-        ls.append(text)
-        data = tokenizer.fit_on_texts(ls)
-        data = tokenizer.texts_to_sequences(ls)
-        print('tokenized data-',data)
-        data = pad_sequences(data, maxlen)
-        print(data)
-        print('pad sequences data-',data)
-        import keras
-        print(os.getcwd())
-        model=keras.models.load_model('/home/covalense/dltkai-sdk/python/resources/sarcasm_word2vec')
-        #model = load_model('resources/sarcasm_word2vec/')
-        #model=pickle.load(open('resources/sarcasm_word2vec.pkl','rb'))
-        #with open('resources/sarcasm_word2vec.pkl', 'rb') as handle:
-            #model = pickle.load(handle)
-        pred=model.predict(data)
-        print('Printing Predictions')
-        print(pred)
-        sample='nothing detected'
-        if pred>0.5:
-            sample='Sarcastic'
-            print("Sarcastic")
-        elif pred<0.5:
-            sample='No Sarcastic'
-            print("No Sarcastic")
-        return sample
+        with open(os.getcwd()+'/resources/sarcasm_tfidf.pickle', 'rb') as handle:
+            tf_idf = pickle.load(handle)
+        with open(os.getcwd()+'/resources/sarcasm_mnb.pickle', 'rb') as handle:
+            mnb = pickle.load(handle)
 
-"""
+        test = tf_idf.transform([text])
+        if mnb.predict(test)[0]==1:
+            return 'Sarcastic'
+        else:
+            return 'Non sarcastic'
+
 """
     def sentiment_analysis(text):
         try:
