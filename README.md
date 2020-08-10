@@ -25,8 +25,8 @@ DLTK SDK requires Python 3.5 + .
 
 ### Usage
 ```sh
-from dltkai.NaturalLanguage import sentiment_detect
-response = sentiment_detect('I am feeling good.')
+import dltkai as dl
+response = dl.NaturalLanguage.sentiment_detect('I am feeling good.')
 print(response)
 ```
 
