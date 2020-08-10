@@ -10,15 +10,27 @@ DLTK renders a comprehensive spectrum of solutions that can be accessed by users
 
 DLTK SDK requires Python 3.5 + .
 
-Install the dltk library: 
-```
-pip install -U dltkai
-```
+1. Fork the repo on GitHub
+2. Download the project code files with:
 
+   ```git clone https://github.com/dltk-ai/dltkai-sdk.git```
+
+3. Go to the project directory
+
+   ```cd dltkai-sdk/python```
+   
+4. Install all the required packages:
+
+   ```pip install .```
+
+### Usage
 ```sh
 from dltkai.NaturalLanguage import sentiment_detect
 response = sentiment_detect('I am feeling good.')
 print(response)
 ```
+
+or you can also checkout some samples by running test.py:
+```python test.py```
 
 For more details, visit https://dltk.ai/
