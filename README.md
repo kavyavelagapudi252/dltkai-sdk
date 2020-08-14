@@ -34,3 +34,9 @@ or you can also checkout some samples by running test.py:
 ```python test.py```
 
 For more details, visit https://dltk.ai/
+
+
+## License
+
+The content of this project itself is licensed under [GNU LGPL, Version 3 (LGPL-3)](https://github.com/dltk-ai/dltkai-sdk/blob/master/python/LICENSE)
+
